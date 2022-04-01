@@ -19,7 +19,7 @@ private const val MENSAGEM_FALHA_CARREGAR_NOTES = "Não foi possível carregar a
 private const val TITULO_APPBAR = "Anotações"
 
 class ListaNotesFragment : Fragment() {
-    var quandoFabSalvaNoteClicada: () -> Unit = {}
+    var quandoFabSalvaNoteClicada: (note: Note?) -> Unit = {}
     var quandoNoteSelecionada: (note: Note) -> Unit = {}
 
     private val viewModel: ListaNotesViewModel by viewModel()
@@ -68,7 +68,7 @@ class ListaNotesFragment : Fragment() {
 
     private fun configuraFabAdicionaNote() {
         binding.listaNotesFabSalvaNote.setOnClickListener {
-            quandoFabSalvaNoteClicada()
+            quandoFabSalvaNoteClicada(null)
         }
     }
 

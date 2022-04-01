@@ -1,6 +1,5 @@
 package br.com.linoo.notes.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,10 +8,12 @@ import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ActivityNotesBinding
 import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.activity.extensions.transacaoFragment
+import br.com.linoo.notes.ui.fragment.FormularioNoteFragment
 import br.com.linoo.notes.ui.fragment.ListaNotesFragment
 import br.com.linoo.notes.ui.fragment.VisualizaNoteFragment
 
 private const val TAG_FRAGMENT_VISUALIZA_NOTE = "visualizaNote"
+private const val TAG_FRAGMENT_FORMULARIO_NOTE = "formularioNote"
 
 class ActivityNotes : AppCompatActivity() {
 
@@ -39,7 +40,7 @@ class ActivityNotes : AppCompatActivity() {
 
     private fun abreListaNotes() {
         transacaoFragment {
-            add(R.id.activity_notes_container_primario, ListaNotesFragment())
+            replace(R.id.activity_notes_container_primario, ListaNotesFragment())
         }
     }
 
@@ -73,12 +74,20 @@ class ActivityNotes : AppCompatActivity() {
             is VisualizaNoteFragment -> {
                 configuraVisualizaNote(fragment)
             }
+            is FormularioNoteFragment -> {
+                configuraFormularioFragment(fragment)
+            }
         }
+    }
+
+    private fun configuraFormularioFragment(fragment: FormularioNoteFragment) {
+
     }
 
     private fun configuraListaNote(fragment: ListaNotesFragment) {
         fragment.quandoNoteSelecionada = this::abreVisualizadorNoticia
-        fragment.quandoFabSalvaNoteClicada = this::abreFormularioModoCriacao
+//        fragment.quandoFabSalvaNoteClicada = this::abreFormularioModoCriacao
+        fragment.quandoFabSalvaNoteClicada = this::abreFormulario
     }
 
     private fun abreVisualizadorNoticia(note: Note) {
@@ -92,24 +101,28 @@ class ActivityNotes : AppCompatActivity() {
         }
     }
 
-    private fun abreFormularioModoCriacao() {
-        val intent = Intent(this, FormularioNoteActivity::class.java)
-        startActivity(intent)
+    private fun abreFormulario(note: Note?) {
+        val fragment = FormularioNoteFragment()
+        val dados = Bundle()
+        dados.putLong(NOTE_ID_CHAVE, note?.id ?: 0L)
+        fragment.arguments = dados
+        transacaoFragment {
+            addToBackStack(null)
+            replace(
+                R.id.activity_notes_container_primario,
+                fragment,
+                TAG_FRAGMENT_FORMULARIO_NOTE
+            )
+        }
     }
 
     private fun configuraVisualizaNote(fragment: VisualizaNoteFragment) {
-        fragment.quandoSelecionaMenuEdicao = this::abreFormularioEdicao
+        fragment.quandoSelecionaMenuEdicao = this::abreFormulario
         fragment.quandoFinalizaActivity = {
             supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_VISUALIZA_NOTE)?.let { fragment ->
                 removeFragment(fragment)
             }
         }
-    }
-
-    private fun abreFormularioEdicao(note: Note) {
-        val intent = Intent(this, FormularioNoteActivity::class.java)
-        intent.putExtra(NOTE_ID_CHAVE, note.id)
-        startActivity(intent)
     }
 
     private fun removeFragment(fragment: Fragment) {
