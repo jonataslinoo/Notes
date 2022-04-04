@@ -8,6 +8,7 @@ import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.FormularioNoteBinding
 import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
+import br.com.linoo.notes.ui.fragment.extensions.mostraErro
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -18,7 +19,7 @@ private const val MENSAGEM_ERRO_SALVAR = "Não foi possível salvar a Anotação
 
 class FormularioNoteFragment : Fragment() {
 
-    var quandoSelecionaMenuSalvar: (note: Note) -> Unit = {}
+    var quandoFinalizaFragment: () -> Unit = {}
 
     private val viewModel: FormularioNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var binding: FormularioNoteBinding
@@ -56,7 +57,7 @@ class FormularioNoteFragment : Fragment() {
             R.id.formulario_note_salva -> {
                 val titulo = binding.formularioNoteTitulo.text.toString()
                 val texto = binding.formularioNoteTexto.text.toString()
-                quandoSelecionaMenuSalvar(Note(noteId, titulo = titulo, texto = texto))
+                salva(Note(noteId, titulo = titulo, texto = texto))
             }
         }
         return super.onOptionsItemSelected(item)
@@ -76,6 +77,19 @@ class FormularioNoteFragment : Fragment() {
                 binding.formularioNoteTitulo.setText(noteEncontrada.titulo)
                 binding.formularioNoteTexto.setText(noteEncontrada.texto)
             }
+        })
+    }
+
+    private fun salva(note: Note) {
+        binding.formularioNoteProgressbar.visibility = View.VISIBLE
+        viewModel.salva(note).observe(this, Observer { resource ->
+            if (resource.erro == null) {
+                quandoFinalizaFragment()
+            } else {
+                mostraErro(MENSAGEM_ERRO_SALVAR)
+            }
+
+            binding.formularioNoteProgressbar.visibility = View.GONE
         })
     }
 }

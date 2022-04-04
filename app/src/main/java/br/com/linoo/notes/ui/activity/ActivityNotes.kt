@@ -12,6 +12,7 @@ import br.com.linoo.notes.ui.fragment.FormularioNoteFragment
 import br.com.linoo.notes.ui.fragment.ListaNotesFragment
 import br.com.linoo.notes.ui.fragment.VisualizaNoteFragment
 
+private const val TAG_FRAGMENT_LISTA_NOTE = "listaNote"
 private const val TAG_FRAGMENT_VISUALIZA_NOTE = "visualizaNote"
 private const val TAG_FRAGMENT_FORMULARIO_NOTE = "formularioNote"
 
@@ -40,7 +41,11 @@ class ActivityNotes : AppCompatActivity() {
 
     private fun abreListaNotes() {
         transacaoFragment {
-            replace(R.id.activity_notes_container_primario, ListaNotesFragment())
+            replace(
+                R.id.activity_notes_container_primario,
+                ListaNotesFragment(),
+                TAG_FRAGMENT_LISTA_NOTE
+            )
         }
     }
 
@@ -81,13 +86,24 @@ class ActivityNotes : AppCompatActivity() {
     }
 
     private fun configuraFormularioFragment(fragment: FormularioNoteFragment) {
-
+        fragment.quandoFinalizaFragment = {
+            supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_FORMULARIO_NOTE)
+                ?.let { fragment ->
+                    removeFragment(fragment)
+                }
+            transacaoFragment {
+                replace(
+                    R.id.activity_notes_container_primario,
+                    ListaNotesFragment(),
+                    TAG_FRAGMENT_LISTA_NOTE
+                )
+            }
+        }
     }
 
     private fun configuraListaNote(fragment: ListaNotesFragment) {
         fragment.quandoNoteSelecionada = this::abreVisualizadorNoticia
-//        fragment.quandoFabSalvaNoteClicada = this::abreFormularioModoCriacao
-        fragment.quandoFabSalvaNoteClicada = this::abreFormulario
+        fragment.quandoFabAdicionaNoteClicada = this::abreFormulario
     }
 
     private fun abreVisualizadorNoticia(note: Note) {
@@ -108,17 +124,13 @@ class ActivityNotes : AppCompatActivity() {
         fragment.arguments = dados
         transacaoFragment {
             addToBackStack(null)
-            replace(
-                R.id.activity_notes_container_primario,
-                fragment,
-                TAG_FRAGMENT_FORMULARIO_NOTE
-            )
+            replace(R.id.activity_notes_container_primario, fragment, TAG_FRAGMENT_FORMULARIO_NOTE)
         }
     }
 
     private fun configuraVisualizaNote(fragment: VisualizaNoteFragment) {
         fragment.quandoSelecionaMenuEdicao = this::abreFormulario
-        fragment.quandoFinalizaActivity = {
+        fragment.quandoFinalizaFragment = {
             supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_VISUALIZA_NOTE)?.let { fragment ->
                 removeFragment(fragment)
             }

@@ -20,7 +20,7 @@ private const val TITULO_APPBAR = "Anotação"
 class VisualizaNoteFragment : Fragment() {
 
     var quandoSelecionaMenuEdicao: (note: Note) -> Unit = {}
-    var quandoFinalizaActivity: () -> Unit = {}
+    var quandoFinalizaFragment: () -> Unit = {}
 
     private val viewModel: VisualizaNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var binding: VisualizaNoteBinding
@@ -32,8 +32,6 @@ class VisualizaNoteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true) //libera os menus para o fragment
-        verificaIdDaNote()
-        buscaNoteSelecionada()
     }
 
     override fun onCreateView(
@@ -44,6 +42,12 @@ class VisualizaNoteFragment : Fragment() {
 
         binding = VisualizaNoteBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        verificaIdDaNote()
+        buscaNoteSelecionada()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +74,7 @@ class VisualizaNoteFragment : Fragment() {
     private fun remove() {
         viewModel.remove().observe(this, Observer { resource ->
             if (resource.erro == null) {
-                quandoFinalizaActivity()
+                quandoFinalizaFragment()
             } else {
                 mostraErro(MENSAGEM_FALHA_REMOCAO)
             }
@@ -93,7 +97,7 @@ class VisualizaNoteFragment : Fragment() {
     private fun verificaIdDaNote() {
         if (noteId == 0L) {
             mostraErro(NOTE_NAO_ENCONTRADA)
-            quandoFinalizaActivity()
+            quandoFinalizaFragment()
         }
     }
 }
