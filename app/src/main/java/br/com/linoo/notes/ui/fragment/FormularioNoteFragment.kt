@@ -8,7 +8,8 @@ import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.FormularioNoteBinding
 import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
-import br.com.linoo.notes.ui.fragment.extensions.mostraErro
+import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
+import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -16,6 +17,8 @@ import org.koin.core.parameter.parametersOf
 private const val TITULO_APPBAR_EDICAO = "Editando Anotação"
 private const val TITULO_APPBAR_CRIACAO = "Criando Anotação"
 private const val MENSAGEM_ERRO_SALVAR = "Não foi possível salvar a Anotação"
+private const val MENSAGEM_ERRO_TITULO_VAZIO = "O título não poser vazio."
+private const val MENSAGEM_ERRO_TEXTO_VAZIO = "O texto não pode ser vazio."
 
 class FormularioNoteFragment : Fragment() {
 
@@ -57,10 +60,26 @@ class FormularioNoteFragment : Fragment() {
             R.id.formulario_note_salva -> {
                 val titulo = binding.formularioNoteTitulo.text.toString()
                 val texto = binding.formularioNoteTexto.text.toString()
-                salva(Note(noteId, titulo = titulo, texto = texto))
+                if (validaCampos(titulo, texto)) {
+                    salva(Note(noteId, titulo = titulo, texto = texto))
+                }
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    //se ambos os itens tiverem dados
+    private fun validaCampos(titulo: String, texto: String): Boolean {
+        if (titulo.equals("")) {
+            mostraMensagem(MENSAGEM_ERRO_TITULO_VAZIO)
+            return false
+        }
+
+        if (texto.equals("")) {
+            mostraMensagem(MENSAGEM_ERRO_TEXTO_VAZIO)
+            return false
+        }
+        return true
     }
 
     private fun definindoTitulo() {
@@ -84,12 +103,25 @@ class FormularioNoteFragment : Fragment() {
         binding.formularioNoteProgressbar.visibility = View.VISIBLE
         viewModel.salva(note).observe(this, Observer { resource ->
             if (resource.erro == null) {
-                quandoFinalizaFragment()
+//                quandoFinalizaFragment()
+                finalizaFragment()
             } else {
-                mostraErro(MENSAGEM_ERRO_SALVAR)
+                mostraMensagem(MENSAGEM_ERRO_SALVAR)
             }
 
             binding.formularioNoteProgressbar.visibility = View.GONE
         })
+    }
+
+    private fun finalizaFragment() {
+        transacaoNavController {
+            if (noteId > 0) {
+                val data = Bundle()
+                data.putLong(NOTE_ID_CHAVE, noteId)
+                navigate(R.id.visualizaNote, data)
+            } else {
+                navigate(R.id.listaNotes)
+            }
+        }
     }
 }

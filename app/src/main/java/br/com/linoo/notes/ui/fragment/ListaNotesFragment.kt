@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ListaNotesBinding
 import br.com.linoo.notes.model.Note
-import br.com.linoo.notes.ui.fragment.extensions.mostraErro
+import br.com.linoo.notes.ui.activity.ActivityNotes
+import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
+import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
+import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.recyclerview.adapter.ListNotesAdapter
 import br.com.linoo.notes.ui.viewmodel.ListaNotesViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -49,13 +54,12 @@ class ListaNotesFragment : Fragment() {
         configuraRecyclerView()
         configuraFabAdicionaNote()
         activity?.title = TITULO_APPBAR
-
     }
 
     private fun buscaNotes() {
         viewModel.buscaTodas().observe(this, Observer { resource ->
             resource.dado?.let { adapter.atualiza(it) }
-            resource.erro?.let { mostraErro(MENSAGEM_FALHA_CARREGAR_NOTES) }
+            resource.erro?.let { mostraMensagem(MENSAGEM_FALHA_CARREGAR_NOTES) }
         })
     }
 
@@ -68,11 +72,28 @@ class ListaNotesFragment : Fragment() {
 
     private fun configuraFabAdicionaNote() {
         binding.listaNotesFabSalvaNote.setOnClickListener {
-            quandoFabAdicionaNoteClicada(null)
+//            quandoFabAdicionaNoteClicada(null)
+            transacaoNavController {
+                navigate(R.id.formularioNote)
+            }
         }
     }
 
     private fun configuraAdapter() {
-        adapter.quandoItemClicado = quandoNoteSelecionada
+//        adapter.quandoItemClicado = quandoNoteSelecionada
+//        adapter.quandoItemClicado = { produtoSelecionado ->
+//            val controller = findNavController()
+//            val data = Bundle()
+//            data.putLong(NOTE_ID_CHAVE, produtoSelecionado.id)
+//            controller.navigate(R.id.visualizaNote, data)
+//        }
+
+        adapter.quandoItemClicado = { produtoSelecionado ->
+            val data = Bundle()
+            data.putLong(NOTE_ID_CHAVE, produtoSelecionado.id)
+            transacaoNavController {
+                navigate(R.id.visualizaNote, data)
+            }
+        }
     }
 }

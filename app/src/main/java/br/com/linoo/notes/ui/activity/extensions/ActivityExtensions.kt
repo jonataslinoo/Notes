@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 
-fun Activity.mostraErro(mensagem: String) {
+fun Activity.mostraMensagem(mensagem: String) {
     Toast.makeText(
         this,
         mensagem,

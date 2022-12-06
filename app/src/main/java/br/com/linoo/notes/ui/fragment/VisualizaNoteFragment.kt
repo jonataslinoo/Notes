@@ -8,7 +8,8 @@ import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.VisualizaNoteBinding
 import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
-import br.com.linoo.notes.ui.fragment.extensions.mostraErro
+import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
+import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -63,7 +64,14 @@ class VisualizaNoteFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.visualiza_note_menu_edita -> {
-                viewModel.noteEncontrada.value?.let(quandoSelecionaMenuEdicao)
+//                viewModel.noteEncontrada.value?.let(quandoSelecionaMenuEdicao)
+                viewModel.noteEncontrada.value?.let {
+                    val data = Bundle()
+                    data.putLong(NOTE_ID_CHAVE, it.id)
+                    transacaoNavController {
+                        navigate(R.id.formularioNote, data)
+                    }
+                }
             }
             R.id.visualiza_note_menu_remove -> remove()
         }
@@ -74,9 +82,10 @@ class VisualizaNoteFragment : Fragment() {
     private fun remove() {
         viewModel.remove().observe(this, Observer { resource ->
             if (resource.erro == null) {
-                quandoFinalizaFragment()
+                //                quandoFinalizaFragment()
+                    finalizaFragment()
             } else {
-                mostraErro(MENSAGEM_FALHA_REMOCAO)
+                mostraMensagem(MENSAGEM_FALHA_REMOCAO)
             }
         })
     }
@@ -96,8 +105,15 @@ class VisualizaNoteFragment : Fragment() {
 
     private fun verificaIdDaNote() {
         if (noteId == 0L) {
-            mostraErro(NOTE_NAO_ENCONTRADA)
-            quandoFinalizaFragment()
+            mostraMensagem(NOTE_NAO_ENCONTRADA)
+//            quandoFinalizaFragment()
+            finalizaFragment()
+        }
+    }
+
+    private fun finalizaFragment() {
+        transacaoNavController {
+            navigate(R.id.listaNotes)
         }
     }
 }
