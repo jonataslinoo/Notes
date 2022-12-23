@@ -11,10 +11,10 @@ class VisualizaNoteViewModel(
     private val repository: NoteRepository
 ) : ViewModel() {
 
-    val noteEncontrada = repository.buscaPorId(id)
+    val noteFind = repository.buscaPorId(id)
 
     fun remove(): LiveData<Resource<Void?>> {
-        return noteEncontrada.value?.run {
+        return noteFind.value?.run {
             repository.remove(this)
         } ?: MutableLiveData<Resource<Void?>>().also {
             it.value = Resource(null, "Anotação não encontrada")

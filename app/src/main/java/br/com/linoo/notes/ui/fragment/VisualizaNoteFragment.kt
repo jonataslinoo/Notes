@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.VisualizaNoteBinding
 import br.com.linoo.notes.model.Note
-import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
@@ -20,15 +20,12 @@ private const val TITULO_APPBAR = "Anotação"
 
 class VisualizaNoteFragment : Fragment() {
 
-    var quandoSelecionaMenuEdicao: (note: Note) -> Unit = {}
-    var quandoFinalizaFragment: () -> Unit = {}
-
+    private val arguments by navArgs<VisualizaNoteFragmentArgs>()
+    private val noteId: Long by lazy {
+        arguments.noteId
+    }
     private val viewModel: VisualizaNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var binding: VisualizaNoteBinding
-    private val noteId: Long by lazy {
-        arguments?.getLong(NOTE_ID_CHAVE)
-            ?: throw IllegalArgumentException("Id inválido")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,27 +60,29 @@ class VisualizaNoteFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
-            R.id.visualiza_note_menu_edita -> {
-//                viewModel.noteEncontrada.value?.let(quandoSelecionaMenuEdicao)
-                viewModel.noteEncontrada.value?.let {
-                    val data = Bundle()
-                    data.putLong(NOTE_ID_CHAVE, it.id)
-                    transacaoNavController {
-                        navigate(R.id.formularioNote, data)
-                    }
-                }
-            }
+            R.id.visualiza_note_menu_edita -> vaiParaEdicaoFormulario()
             R.id.visualiza_note_menu_remove -> remove()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    private fun vaiParaEdicaoFormulario() {
+        viewModel.noteFind.value?.let { noteReceived ->
+            transacaoNavController {
+                navigate(
+                    VisualizaNoteFragmentDirections.acaoVisualizaNoteParaFormularioNote(
+                        noteReceived.id
+                    )
+                )
+            }
+        }
+    }
+
     private fun remove() {
         viewModel.remove().observe(this, Observer { resource ->
             if (resource.erro == null) {
-                //                quandoFinalizaFragment()
-                    finalizaFragment()
+                endFragment()
             } else {
                 mostraMensagem(MENSAGEM_FALHA_REMOCAO)
             }
@@ -91,8 +90,8 @@ class VisualizaNoteFragment : Fragment() {
     }
 
     private fun buscaNoteSelecionada() {
-        viewModel.noteEncontrada.observe(this, Observer { noteEncontrada ->
-            noteEncontrada?.let {
+        viewModel.noteFind.observe(this, Observer { noteFind ->
+            noteFind?.let {
                 preencheCampos(it)
             }
         })
@@ -106,14 +105,13 @@ class VisualizaNoteFragment : Fragment() {
     private fun verificaIdDaNote() {
         if (noteId == 0L) {
             mostraMensagem(NOTE_NAO_ENCONTRADA)
-//            quandoFinalizaFragment()
-            finalizaFragment()
+            endFragment()
         }
     }
 
-    private fun finalizaFragment() {
+    private fun endFragment() {
         transacaoNavController {
-            navigate(R.id.listaNotes)
+            navigate(VisualizaNoteFragmentDirections.acaoVisualizaNoteParaListaNotes())
         }
     }
 }

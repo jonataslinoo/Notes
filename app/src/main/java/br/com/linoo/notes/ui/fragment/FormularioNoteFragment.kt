@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.FormularioNoteBinding
 import br.com.linoo.notes.model.Note
-import br.com.linoo.notes.ui.activity.NOTE_ID_CHAVE
+import br.com.linoo.notes.ui.fragment.extensions.hideKeyboard
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
@@ -21,13 +22,12 @@ private const val MENSAGEM_ERRO_TITULO_VAZIO = "O título não poser vazio."
 
 class FormularioNoteFragment : Fragment() {
 
-    var quandoFinalizaFragment: () -> Unit = {}
-
+    private val arguments by navArgs<FormularioNoteFragmentArgs>()
+    private val noteId: Long by lazy {
+        arguments.noteId
+    }
     private val viewModel: FormularioNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var binding: FormularioNoteBinding
-    private val noteId: Long by lazy {
-        arguments?.getLong(NOTE_ID_CHAVE) ?: 0
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,15 +56,20 @@ class FormularioNoteFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
-            R.id.formulario_note_salva -> {
-                val titulo = binding.formularioNoteTitulo.text.toString()
-                val texto = binding.formularioNoteTexto.text.toString()
-                if (validaCampos(titulo)) {
-                    salva(Note(noteId, titulo = titulo, texto = texto))
-                }
-            }
+            R.id.formulario_note_salva -> vinculaDadosSalvaNote()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun vinculaDadosSalvaNote() {
+        val titulo = binding.formularioNoteTitulo.text.toString()
+        val texto = binding.formularioNoteTexto.text.toString()
+        if (validaCampos(titulo)) {
+            salva(Note(noteId, titulo = titulo, texto = texto))
+        }
+
+        hideKeyboard(binding.formularioNoteTitulo)
+        hideKeyboard(binding.formularioNoteTexto)
     }
 
     private fun validaCampos(titulo: String): Boolean {
@@ -85,10 +90,10 @@ class FormularioNoteFragment : Fragment() {
     }
 
     private fun preencheFormulario() {
-        viewModel.buscaPorId(noteId).observe(this, Observer { noteEncontrada ->
-            if (noteEncontrada != null) {
-                binding.formularioNoteTitulo.setText(noteEncontrada.titulo)
-                binding.formularioNoteTexto.setText(noteEncontrada.texto)
+        viewModel.buscaPorId(noteId).observe(this, Observer { noteFind ->
+            if (noteFind != null) {
+                binding.formularioNoteTitulo.setText(noteFind.titulo)
+                binding.formularioNoteTexto.setText(noteFind.texto)
             }
         })
     }
@@ -97,18 +102,17 @@ class FormularioNoteFragment : Fragment() {
         binding.formularioNoteProgressbar.visibility = View.VISIBLE
         viewModel.salva(note).observe(this, Observer { resource ->
             if (resource.erro == null) {
-                finalizaFragment()
+                endFragment()
             } else {
                 mostraMensagem(MENSAGEM_ERRO_SALVAR)
             }
-
             binding.formularioNoteProgressbar.visibility = View.GONE
         })
     }
 
-    private fun finalizaFragment() {
+    private fun endFragment() {
         transacaoNavController {
-            navigate(R.id.listaNotes)
+            navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotes())
         }
     }
 }

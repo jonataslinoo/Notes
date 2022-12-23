@@ -28,10 +28,9 @@ class ListNotesAdapter(
     override fun getItemCount() = notes.size
 
     fun atualiza(notes: List<Note>) {
-        notifyItemRangeRemoved(0, this.notes.size)
         this.notes.clear()
         this.notes.addAll(notes)
-        notifyItemRangeInserted(0, this.notes.size)
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

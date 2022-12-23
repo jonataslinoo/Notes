@@ -8,15 +8,61 @@
         android:id="@+id/listaNotes"
         android:name="br.com.linoo.notes.ui.fragment.ListaNotesFragment"
         android:label="Lista de notas"
-        tools:layout="@layout/lista_notes" />
+        tools:layout="@layout/lista_notes" >
+        <action
+            android:id="@+id/acao_listaNotes_para_visualizaNote"
+            app:destination="@id/visualizaNote"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/acao_listaNotes_para_formularioNote"
+            app:destination="@id/formularioNote"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/visualizaNote"
         android:name="br.com.linoo.notes.ui.fragment.VisualizaNoteFragment"
         android:label="Visualiza Note"
-        tools:layout="@layout/visualiza_note" />
+        tools:layout="@layout/visualiza_note" >
+        <action
+            android:id="@+id/acao_visualizaNote_para_formularioNote"
+            app:destination="@id/formularioNote"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/acao_visualizaNote_para_listaNotes"
+            app:destination="@id/listaNotes"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/nav_graph" />
+        <argument
+            android:name="noteId"
+            app:argType="long" />
+    </fragment>
     <fragment
         android:id="@+id/formularioNote"
         android:name="br.com.linoo.notes.ui.fragment.FormularioNoteFragment"
         android:label="Formulário Note"
-        tools:layout="@layout/formulario_note" />
+        tools:layout="@layout/formulario_note" >
+        <action
+            android:id="@+id/acao_formularioNote_para_listaNotes"
+            app:destination="@id/listaNotes"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/nav_graph" />
+        <argument
+            android:name="noteId"
+            app:argType="long" />
+    </fragment>
 </navigation>
