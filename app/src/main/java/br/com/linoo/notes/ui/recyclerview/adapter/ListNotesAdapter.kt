@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ItemNoteBinding
+import br.com.linoo.notes.extensions.formataDataHora
 import br.com.linoo.notes.model.Note
 
 class ListNotesAdapter(
     private val context: Context,
     private val notes: MutableList<Note> = mutableListOf(),
-    var quandoItemClicado: (note: Note) -> Unit = {}
+    var quandoItemClicado: (note: Note) -> Unit = {},
+    var quandoStarClicado: (noteId: Long) -> Unit = {}
 ) : RecyclerView.Adapter<ListNotesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,9 +41,16 @@ class ListNotesAdapter(
         private lateinit var note: Note
 
         init {
-            itemView.setOnClickListener {
+            binding.itemNotePrincipalCardview.setOnClickListener {
                 if (::note.isInitialized) {
                     quandoItemClicado(note)
+                }
+            }
+
+            binding.itemNoteStar.setOnClickListener {
+                if (::note.isInitialized) {
+                    it.setBackgroundResource(R.drawable.ic_star_blue)
+                    quandoStarClicado(note.id)
                 }
             }
         }
@@ -50,7 +59,7 @@ class ListNotesAdapter(
             this.note = note
             binding.itemNoteTitulo.text = note.titulo
             binding.itemNoteTexto.text = note.texto
-            binding.itemNoteData.text = note.data
+            binding.itemNoteData.text = note.data.formataDataHora()
         }
     }
 }

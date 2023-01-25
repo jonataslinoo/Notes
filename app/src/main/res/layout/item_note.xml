@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:padding="8dp"
-    tools:ignore="UnusedAttribute">
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp"
+    tools:ignore="UnusedAttribute"
+    android:id="@+id/item_note_principal_cardview">
 
-    <TextView
-        android:id="@+id/item_note_titulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@tools:sample/lorem" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/item_note_texto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/item_note_titulo"
-        app:layout_constraintStart_toStartOf="@id/item_note_titulo"
-        app:layout_constraintTop_toBottomOf="@id/item_note_titulo"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="@tools:sample/lorem" />
+        <TextView
+            android:id="@+id/item_note_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/item_note_star"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Teste titulo app anotações tamanho texto" />
 
-    <TextView
-        android:id="@+id/item_note_data"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/item_note_texto"
-        app:layout_constraintStart_toStartOf="@id/item_note_texto"
-        app:layout_constraintTop_toBottomOf="@id/item_note_texto"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="@tools:sample/lorem" />
+        <TextView
+            android:id="@+id/item_note_texto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="14sp"
+            android:layout_below="@id/item_note_titulo"
+            tools:text="Teste descrição app anotações tamanho texto ajustado ao label de visualização do cardview de tamanho" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/item_note_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem"
+            android:layout_below="@id/item_note_texto"/>
+
+        <ImageButton
+            android:id="@+id/item_note_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_star_gray" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

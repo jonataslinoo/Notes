@@ -21,22 +21,14 @@ val appModules = module {
             NOME_BANCO_DE_DADOS
         ).build()
     }
-    single<NoteDAO> {
-        get<AppDatabase>().noteDAO
-    }
-    single<NoteWebClient> {
-        NoteWebClient()
-    }
-    single<NoteRepository> {
-        NoteRepository(get(), get())
-    }
-    viewModel<ListaNotesViewModel> {
-        ListaNotesViewModel(get())
-    }
-    viewModel<VisualizaNoteViewModel> { (id: Long) ->
-        VisualizaNoteViewModel(id, get())
-    }
-    viewModel<FormularioNoteViewModel> {
-        FormularioNoteViewModel(get())
-    }
+
+    single<NoteDAO> { get<AppDatabase>().noteDAO() }
+
+    single<NoteWebClient> { NoteWebClient() }
+
+    single<NoteRepository> { NoteRepository(get(), get()) }
+
+    viewModel<ListaNotesViewModel> { ListaNotesViewModel(get()) }
+    viewModel<VisualizaNoteViewModel> { (id: Long) -> VisualizaNoteViewModel(id, get()) }
+    viewModel<FormularioNoteViewModel> { FormularioNoteViewModel(get()) }
 }

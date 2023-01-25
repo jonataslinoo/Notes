@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.linoo.notes.databinding.ListaNotesBinding
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
@@ -56,8 +54,6 @@ class ListaNotesFragment : Fragment() {
     }
 
     private fun configuraRecyclerView() {
-        val divisor = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        binding.listaNotesRecyclerview.addItemDecoration(divisor)
         binding.listaNotesRecyclerview.adapter = adapter
         configuraAdapter()
     }
@@ -76,6 +72,9 @@ class ListaNotesFragment : Fragment() {
         adapter.quandoItemClicado = { noteSelected ->
             transacaoNavController {
                 navigate(ListaNotesFragmentDirections.acaoListaNotesParaVisualizaNote(noteSelected.id))
+            }
+            adapter.quandoStarClicado = { noteId ->
+                mostraMensagem("teste clique favorito")
             }
         }
     }
