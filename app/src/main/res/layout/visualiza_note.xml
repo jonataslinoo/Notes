@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:textSize="32sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/visualiza_note_texto"

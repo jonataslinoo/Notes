@@ -28,6 +28,7 @@
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         android:gravity="top"
+        android:textSize="18sp"
         android:hint="@string/escreva_seu_texto"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
