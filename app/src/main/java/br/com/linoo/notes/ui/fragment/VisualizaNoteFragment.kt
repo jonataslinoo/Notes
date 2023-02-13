@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.VisualizaNoteBinding
-import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
@@ -21,11 +20,9 @@ private const val TITULO_APPBAR = "Anotação"
 class VisualizaNoteFragment : Fragment() {
 
     private val arguments by navArgs<VisualizaNoteFragmentArgs>()
-    private val noteId: Long by lazy {
-        arguments.noteId
-    }
+    private val noteId: Long by lazy { arguments.noteId }
     private val viewModel: VisualizaNoteViewModel by viewModel { parametersOf(noteId) }
-    private lateinit var binding: VisualizaNoteBinding
+    private lateinit var viewDataBinding: VisualizaNoteBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +35,8 @@ class VisualizaNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = VisualizaNoteBinding.inflate(inflater, container, false)
-        return binding.root
+        viewDataBinding = VisualizaNoteBinding.inflate(inflater, container, false)
+        return viewDataBinding.root
     }
 
     override fun onResume() {
@@ -92,22 +89,19 @@ class VisualizaNoteFragment : Fragment() {
     private fun buscaNoteSelecionada() {
         viewModel.noteFind.observe(this, Observer { noteFind ->
             noteFind?.let {
-                preencheCampos(it)
+                viewDataBinding.note = noteFind
             }
         })
     }
 
-    private fun preencheCampos(note: Note) {
-        binding.visualizaNoteTitulo.text = note.titulo
-        binding.visualizaNoteTexto.text = note.texto
-    }
-
     private fun verificaIdDaNote() {
-        if (noteId == 0L) {
+        if (!temIdValido()) {
             mostraMensagem(NOTE_NAO_ENCONTRADA)
             endFragment()
         }
     }
+
+    private fun temIdValido() = noteId != 0L
 
     private fun endFragment() {
         transacaoNavController {

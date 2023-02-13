@@ -18,12 +18,13 @@ private const val TITULO_APPBAR = "Anotações"
 
 class ListaNotesFragment : Fragment() {
     private val viewModel: ListaNotesViewModel by viewModel()
-    private lateinit var binding: ListaNotesBinding
-    private val adapter by lazy {
+    private val listaNotasAdapter by lazy {
         context?.let {
             ListNotesAdapter(context = it)
         } ?: throw IllegalArgumentException("Contexto Inválido")
     }
+
+    private lateinit var viewDataBinding: ListaNotesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,47 +36,40 @@ class ListaNotesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = ListaNotesBinding.inflate(inflater, container, false)
-        return binding.root
+        viewDataBinding = ListaNotesBinding.inflate(inflater, container, false)
+        viewDataBinding.vaiParaFormularioInsercao = View.OnClickListener {
+            insereNovaNote()
+        }
+        return viewDataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configuraRecyclerView()
-        configuraFabAdicionaNote()
         activity?.title = TITULO_APPBAR
     }
 
     private fun buscaNotes() {
         viewModel.buscaTodas().observe(this, Observer { resource ->
-            resource.dado?.let { adapter.atualiza(it) }
+            resource.dado?.let { listaNotasAdapter.atualiza(it) }
             resource.erro?.let { mostraMensagem(MENSAGEM_FALHA_CARREGAR_NOTES) }
         })
     }
 
     private fun configuraRecyclerView() {
-        binding.listaNotesRecyclerview.adapter = adapter
-        configuraAdapter()
-    }
-
-    private fun configuraFabAdicionaNote() {
-        binding.listaNotesFabSalvaNote.setOnClickListener {
+        viewDataBinding.listaNotesRecyclerview.run {
+            adapter = listaNotasAdapter
+        }
+        listaNotasAdapter.quandoItemClicado = { noteSelected ->
             transacaoNavController {
-                transacaoNavController {
-                    navigate(ListaNotesFragmentDirections.acaoListaNotesParaFormularioNote(0))
-                }
+                navigate(ListaNotesFragmentDirections.acaoListaNotesParaVisualizaNote(noteSelected.id))
             }
         }
     }
 
-    private fun configuraAdapter() {
-        adapter.quandoItemClicado = { noteSelected ->
-            transacaoNavController {
-                navigate(ListaNotesFragmentDirections.acaoListaNotesParaVisualizaNote(noteSelected.id))
-            }
-            adapter.quandoStarClicado = { noteId ->
-                mostraMensagem("teste clique favorito")
-            }
+    private fun insereNovaNote() {
+        transacaoNavController {
+            navigate(ListaNotesFragmentDirections.acaoListaNotesParaFormularioNote(0))
         }
     }
 }

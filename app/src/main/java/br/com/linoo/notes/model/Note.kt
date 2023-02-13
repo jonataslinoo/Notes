@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class Note(
     @PrimaryKey(autoGenerate = false)
-    @SerializedName("id") val id: Long,
+    @SerializedName("id") val id: Long = 0,
     @SerializedName("date") val data: String = "",
     @SerializedName("title") val titulo: String = "",
-    @SerializedName("message") val texto: String = ""
+    @SerializedName("message") val descricao: String = ""
 )
 
 

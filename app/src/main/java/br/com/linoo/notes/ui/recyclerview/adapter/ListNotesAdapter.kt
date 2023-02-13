@@ -4,22 +4,25 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.RecyclerView
-import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ItemNoteBinding
-import br.com.linoo.notes.extensions.formataDataHora
 import br.com.linoo.notes.model.Note
 
 class ListNotesAdapter(
     private val context: Context,
     private val notes: MutableList<Note> = mutableListOf(),
     var quandoItemClicado: (note: Note) -> Unit = {},
-    var quandoStarClicado: (noteId: Long) -> Unit = {}
 ) : RecyclerView.Adapter<ListNotesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewCriada = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false)
-        return ViewHolder(viewCriada)
+        val inflater = LayoutInflater.from(context)
+        val viewDataBinding = ItemNoteBinding.inflate(inflater, parent, false)
+        return ViewHolder(viewDataBinding).also {
+            viewDataBinding.lifecycleOwner = it
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -35,31 +38,50 @@ class ListNotesAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding = ItemNoteBinding.bind(itemView)
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.marcaComoAtivado()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.marcaComoDesativado()
+    }
+
+    inner class ViewHolder(private val viewDataBinding: ItemNoteBinding) :
+        RecyclerView.ViewHolder(viewDataBinding.root),
+        View.OnClickListener, LifecycleOwner {
 
         private lateinit var note: Note
 
-        init {
-            binding.itemNotePrincipalCardview.setOnClickListener {
-                if (::note.isInitialized) {
-                    quandoItemClicado(note)
-                }
-            }
+        fun vincula(note: Note) {
+            this.note = note
+            viewDataBinding.nota = note
+        }
 
-            binding.itemNoteStar.setOnClickListener {
-                if (::note.isInitialized) {
-                    it.setBackgroundResource(R.drawable.ic_star_blue)
-                    quandoStarClicado(note.id)
-                }
+        init {
+            viewDataBinding.clicaNaNota = this
+        }
+
+        override fun onClick(view: View?) {
+            if (::note.isInitialized) {
+                quandoItemClicado(note)
             }
         }
 
-        fun vincula(note: Note) {
-            this.note = note
-            binding.itemNoteTitulo.text = note.titulo
-            binding.itemNoteTexto.text = note.texto
-            binding.itemNoteData.text = note.data.formataDataHora()
+        private val registry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle = registry
+
+        init {
+            registry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun marcaComoAtivado() {
+            registry.currentState = Lifecycle.State.STARTED
+        }
+
+        fun marcaComoDesativado() {
+            registry.currentState = Lifecycle.State.DESTROYED
         }
     }
 }

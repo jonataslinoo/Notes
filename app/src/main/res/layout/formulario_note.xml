@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="note"
+            type="br.com.linoo.notes.ui.databinding.NoteData" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/formulario_note_titulo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:background="@android:color/transparent"
         android:hint="@string/titulo"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@={note.titulo}"
+        app:layout_constraintEnd_toStartOf="@id/formulario_note_favorita"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UnusedAttribute" />
+
+    <CheckBox
+        android:id="@+id/formulario_note_favorita"
+        style="?android:attr/starStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/formulario_note_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/formulario_note_titulo"
+        app:layout_constraintTop_toTopOf="@id/formulario_note_titulo"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/formulario_note_texto"
@@ -28,12 +47,13 @@
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         android:gravity="top"
-        android:textSize="18sp"
         android:hint="@string/escreva_seu_texto"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
+        android:textSize="18sp"
+        android:text="@={note.descricao}"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/formulario_note_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/formulario_note_titulo"
         app:layout_constraintTop_toBottomOf="@id/formulario_note_titulo"
         tools:ignore="UnusedAttribute" />
@@ -49,3 +69,4 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
