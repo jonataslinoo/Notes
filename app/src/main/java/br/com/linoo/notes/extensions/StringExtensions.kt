@@ -17,13 +17,12 @@ fun String.formataDataHora(): String {
         formatoSaida.format(parsed)
 
     } catch (e: Exception) {
-//        val dtf = DateTimeFormatter.ofPattern(FORMATO_DATA_INICIAL, Locale.ENGLISH)
-//        val odt: OffsetDateTime = OffsetDateTime.parse(this, dtf)
-//        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-//        val parsed = ZonedDateTime.parse(odt.toString(), formatter)
-//        val formatoSaida = DateTimeFormatter.ofPattern(FORMATO_DATA_FINAL)
-//        formatoSaida.format(parsed)
-        ""
+        val dtf = DateTimeFormatter.ofPattern(FORMATO_DATA_INICIAL, Locale.ENGLISH)
+        val odt: OffsetDateTime = OffsetDateTime.parse(this, dtf)
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val parsed = ZonedDateTime.parse(odt.toString(), formatter)
+        val formatoSaida = DateTimeFormatter.ofPattern(FORMATO_DATA_FINAL)
+        formatoSaida.format(parsed)
     }
 }
 

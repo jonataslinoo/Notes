@@ -48,21 +48,21 @@ class NoteRepository(
 
     fun buscaTodas(): LiveData<Resource<List<Note>?>> {
 
-        mediador.addSource(dao.buscaTodas()) { mediador.value = Resource(dado = it) }
 //        mediador.addSource(dao.buscaTodas()) { mediador.value = Resource(dado = it) }
-//
-//        val falhasRetornoApiLiveData = MutableLiveData<Resource<List<Note>?>>()
-//        mediador.addSource(falhasRetornoApiLiveData) { resourceDeFalha ->
-//            val resourceAtual = mediador.value
-//
-//            mediador.value =
-//                criaResourceDeFalha(resourceAtual = resourceAtual, erro = resourceDeFalha.erro)
-//        }
-//
-//        buscaNaApi(quandoFalha = { erro ->
-//            falhasRetornoApiLiveData.value = Resource(dado = null, erro = erro)
-//        })
-//
+        mediador.addSource(dao.buscaTodas()) { mediador.value = Resource(dado = it) }
+
+        val falhasRetornoApiLiveData = MutableLiveData<Resource<List<Note>?>>()
+        mediador.addSource(falhasRetornoApiLiveData) { resourceDeFalha ->
+            val resourceAtual = mediador.value
+
+            mediador.value =
+                criaResourceDeFalha(resourceAtual = resourceAtual, erro = resourceDeFalha.erro)
+        }
+
+        buscaNaApi(quandoFalha = { erro ->
+            falhasRetornoApiLiveData.value = Resource(dado = null, erro = erro)
+        })
+
         return mediador
     }
 
