@@ -1,7 +1,9 @@
 package br.com.linoo.notes.ui.databinding
 
 import androidx.lifecycle.MutableLiveData
+import br.com.linoo.notes.extensions.salvaDataFormatada
 import br.com.linoo.notes.model.Note
+import java.util.*
 
 class NoteData(
     private var note: Note = Note(),
@@ -20,10 +22,20 @@ class NoteData(
     }
 
     fun paraNote(): Note? {
+        if (this.note.id == 0L) {
+            return this.note.copy(
+                id = Calendar.getInstance().timeInMillis,
+                titulo = titulo.value ?: return null,
+                descricao = descricao.value ?: return null,
+                data = Calendar.getInstance().time.toString().salvaDataFormatada()
+//                favorita = favorita.value ?: return null
+            )
+        }
         return this.note.copy(
             titulo = titulo.value ?: return null,
-            descricao = descricao.value ?: return null
-//            favorita = favorita.valuew ?: return null
+            descricao = descricao.value ?: return null,
+            data = note.data.salvaDataFormatada()
+//            favorita = favorita.value ?: return null
         )
     }
 }

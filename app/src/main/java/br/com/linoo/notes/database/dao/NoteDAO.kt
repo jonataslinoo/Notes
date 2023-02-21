@@ -20,7 +20,7 @@ interface NoteDAO {
     @Delete
     fun remove(note: Note)
 
-    @Query("SELECT *FROM Note WHERE id = :id")
+    @Query("SELECT * FROM Note WHERE id = :id")
     fun buscaPorId(id: Long): LiveData<Note?>
 
     @Insert(onConflict = REPLACE)

@@ -1,6 +1,5 @@
 package br.com.linoo.notes.di.modules
 
-import androidx.room.Room
 import br.com.linoo.notes.database.AppDatabase
 import br.com.linoo.notes.database.dao.NoteDAO
 import br.com.linoo.notes.repository.NoteRepository
@@ -11,24 +10,34 @@ import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-private const val NOME_BANCO_DE_DADOS = "notes.db"
-
-val appModules = module {
+val dbModule = module {
     single<AppDatabase> {
-        Room.databaseBuilder(
-            get(),
-            AppDatabase::class.java,
-            NOME_BANCO_DE_DADOS
-        ).build()
+        AppDatabase.instancia(get())
     }
+}
 
-    single<NoteDAO> { get<AppDatabase>().noteDAO() }
-
-    single<NoteWebClient> { NoteWebClient() }
-
+val repositoryModule = module {
     single<NoteRepository> { NoteRepository(get(), get()) }
+}
 
+val daoModule = module {
+    single<NoteDAO> { get<AppDatabase>().noteDAO() }
+}
+
+val webClientModule = module {
+    single<NoteWebClient> { NoteWebClient() }
+}
+
+val viewModelModule = module {
     viewModel<ListaNotesViewModel> { ListaNotesViewModel(get()) }
     viewModel<VisualizaNoteViewModel> { (id: Long) -> VisualizaNoteViewModel(id, get()) }
     viewModel<FormularioNoteViewModel> { FormularioNoteViewModel(get()) }
 }
+
+val appModules = listOf(
+    dbModule,
+    daoModule,
+    repositoryModule,
+    webClientModule,
+    viewModelModule
+)

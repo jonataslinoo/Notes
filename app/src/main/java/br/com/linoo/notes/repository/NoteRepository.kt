@@ -14,30 +14,62 @@ class NoteRepository(
     private val webClient: NoteWebClient
 ) {
 
+    fun salva(note: Note, job: Job = Job()): LiveData<Resource<Void?>> {
+        return MutableLiveData<Resource<Void?>>().also { livedata ->
+            val scope = CoroutineScope(Dispatchers.IO + job)
+            scope.launch {
+                val resource: Resource<Void?> = try {
+                    dao.salva(note)
+                    Resource(dado = null)
+                } catch (e: IOException) {
+                    Resource(dado = null, erro = e.message)
+                }
+                livedata.postValue(resource)
+            }
+        }
+    }
+
+    fun edita(note: Note, job: Job = Job()): LiveData<Resource<Void?>> {
+        return MutableLiveData<Resource<Void?>>().also { livedata ->
+            val scope = CoroutineScope(Dispatchers.IO + job)
+            scope.launch {
+                val resource: Resource<Void?> = try {
+                    dao.salva(note)
+                    Resource(dado = null)
+                } catch (e: IOException) {
+                    Resource(dado = null, erro = e.message)
+                }
+                livedata.postValue(resource)
+            }
+        }
+    }
+
     private val mediador = MediatorLiveData<Resource<List<Note>?>>()
 
     fun buscaTodas(): LiveData<Resource<List<Note>?>> {
 
         mediador.addSource(dao.buscaTodas()) { mediador.value = Resource(dado = it) }
-
-        val falhasRetornoApiLiveData = MutableLiveData<Resource<List<Note>?>>()
-        mediador.addSource(falhasRetornoApiLiveData) { resourceDeFalha ->
-            val resourceAtual = mediador.value
-
-            mediador.value =
-                criaResourceDeFalha(resourceAtual = resourceAtual, erro = resourceDeFalha.erro)
-        }
-
-        buscaNaApi(quandoFalha = { erro ->
-            falhasRetornoApiLiveData.value = Resource(dado = null, erro = erro)
-        })
-
+//        mediador.addSource(dao.buscaTodas()) { mediador.value = Resource(dado = it) }
+//
+//        val falhasRetornoApiLiveData = MutableLiveData<Resource<List<Note>?>>()
+//        mediador.addSource(falhasRetornoApiLiveData) { resourceDeFalha ->
+//            val resourceAtual = mediador.value
+//
+//            mediador.value =
+//                criaResourceDeFalha(resourceAtual = resourceAtual, erro = resourceDeFalha.erro)
+//        }
+//
+//        buscaNaApi(quandoFalha = { erro ->
+//            falhasRetornoApiLiveData.value = Resource(dado = null, erro = erro)
+//        })
+//
         return mediador
     }
 
     fun buscaPorId(noteId: Long) = dao.buscaPorId(noteId)
-    fun salva(note: Note, job: Job = Job()) = salvaNaApi(note, job)
-    fun edita(note: Note, job: Job = Job()) = editaNaApi(note, job)
+
+    //    fun salva(note: Note, job: Job = Job()) = salvaNaApi(note, job)
+//    fun edita(note: Note, job: Job = Job()) = editaNaApi(note, job)
     fun remove(note: Note) = removeNaApi(note)
 
     private fun buscaNaApi(quandoFalha: (erro: String?) -> Unit) {

@@ -6,5 +6,7 @@ import br.com.linoo.notes.extensions.formataDataHora
 
 @BindingAdapter("carregaTextoData")
 fun TextView.carregaTextoDataView(date: String?) {
-    text = date?.run { formataDataHora() }
+    text = date?.run {
+        formataDataHora()
+    }
 }
