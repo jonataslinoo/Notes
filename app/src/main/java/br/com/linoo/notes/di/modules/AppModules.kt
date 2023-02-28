@@ -30,7 +30,7 @@ val webClientModule = module {
 
 val viewModelModule = module {
     viewModel<ListaNotesViewModel> { ListaNotesViewModel(get()) }
-    viewModel<VisualizaNoteViewModel> { (id: Long) -> VisualizaNoteViewModel(id, get()) }
+    viewModel<VisualizaNoteViewModel> { VisualizaNoteViewModel(get()) }
     viewModel<FormularioNoteViewModel> { FormularioNoteViewModel(get()) }
 }
 

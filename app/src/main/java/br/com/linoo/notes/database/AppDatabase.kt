@@ -10,7 +10,7 @@ import br.com.linoo.notes.model.Note
 private const val NOME_BANCO_DE_DADOS = "notes.db"
 
 @Database(
-    version = 1,
+    version = 3,
     entities = [Note::class],
     exportSchema = false
 )
@@ -28,6 +28,8 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 NOME_BANCO_DE_DADOS
             )
+                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .build().also {
                     db = it
                 }

@@ -11,13 +11,7 @@ class FormularioNoteViewModel(private val repository: NoteRepository) : ViewMode
 
     private val job = Job()
 
-    fun salva(note: Note): LiveData<Resource<Void?>> {
-        return if (note.id > 0) {
-            repository.edita(note, job)
-        } else {
-            repository.salva(note, job)
-        }
-    }
+    fun salva(note: Note): LiveData<Resource<Void?>> = repository.salva(note, job)
 
     fun buscaPorId(noteId: Long) = repository.buscaPorId(noteId)
 

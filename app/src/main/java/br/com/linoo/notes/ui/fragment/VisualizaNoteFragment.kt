@@ -7,14 +7,17 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.VisualizaNoteBinding
+import br.com.linoo.notes.model.Note
+import br.com.linoo.notes.ui.databinding.NoteData
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-private const val NOTE_NAO_ENCONTRADA = "Anotação não encontrada"
-private const val MENSAGEM_FALHA_REMOCAO = "Não foi possível remover a anotação"
+private const val NOTE_NAO_ENCONTRADA = "Anotação não encontrada!"
+private const val MENSAGEM_FALHA_REMOCAO = "Não foi possível remover a anotação!"
+private const val MENSAGEM_SUCESSO_REMOCAO = "Anotação removida com sucesso!"
 private const val TITULO_APPBAR = "Anotação"
 
 class VisualizaNoteFragment : Fragment() {
@@ -36,6 +39,7 @@ class VisualizaNoteFragment : Fragment() {
     ): View? {
 
         viewDataBinding = VisualizaNoteBinding.inflate(inflater, container, false)
+        viewDataBinding.lifecycleOwner = this
         return viewDataBinding.root
     }
 
@@ -58,28 +62,38 @@ class VisualizaNoteFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.visualiza_note_menu_edita -> vaiParaEdicaoFormulario()
-            R.id.visualiza_note_menu_remove -> remove()
+            R.id.visualiza_note_menu_remove -> {
+                viewModel.buscaPorId(noteId).observe(this, Observer {
+                    it?.run {
+                        removida = true
+                        remove(this)
+                    }
+                })
+            }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
     private fun vaiParaEdicaoFormulario() {
-        viewModel.noteFind.value?.let { noteReceived ->
-            transacaoNavController {
-                navigate(
-                    VisualizaNoteFragmentDirections.acaoVisualizaNoteParaFormularioNote(
-                        noteReceived.id
+        viewModel.buscaPorId(noteId).observe(this, Observer {
+            it?.let { noteEncontrada ->
+                transacaoNavController {
+                    navigate(
+                        VisualizaNoteFragmentDirections.acaoVisualizaNoteParaFormularioNote(
+                            noteEncontrada.id
+                        )
                     )
-                )
+                }
             }
-        }
+        })
     }
 
-    private fun remove() {
-        viewModel.remove().observe(this, Observer { resource ->
+    private fun remove(note: Note) {
+        viewModel.remove(note).observe(this, Observer { resource ->
             if (resource.erro == null) {
                 endFragment()
+                mostraMensagem(MENSAGEM_SUCESSO_REMOCAO)
             } else {
                 mostraMensagem(MENSAGEM_FALHA_REMOCAO)
             }
@@ -87,9 +101,9 @@ class VisualizaNoteFragment : Fragment() {
     }
 
     private fun buscaNoteSelecionada() {
-        viewModel.noteFind.observe(this, Observer { noteFind ->
+        viewModel.buscaPorId(noteId).observe(this, Observer { noteFind ->
             noteFind?.let {
-                viewDataBinding.note = noteFind
+                viewDataBinding.note = it
             }
         })
     }
