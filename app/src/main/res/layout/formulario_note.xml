@@ -33,11 +33,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:checked="@={note.favorita}"
         app:layout_constraintBottom_toBottomOf="@id/formulario_note_titulo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/formulario_note_titulo"
-        app:layout_constraintTop_toTopOf="@id/formulario_note_titulo"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@id/formulario_note_titulo" />
 
     <EditText
         android:id="@+id/formulario_note_texto"

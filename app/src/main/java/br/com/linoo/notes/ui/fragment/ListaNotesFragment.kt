@@ -15,6 +15,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val MENSAGEM_FALHA_CARREGAR_NOTES = "Não foi possível carregar as anotações"
 private const val TITULO_APPBAR = "Anotações"
+private const val TITULO_APPBAR_FAVORITA = "Favoritas"
 
 class ListaNotesFragment : Fragment() {
     private val viewModel: ListaNotesViewModel by viewModel()

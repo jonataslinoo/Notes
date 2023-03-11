@@ -10,7 +10,7 @@
             type="android.view.View.OnClickListener" />
 
         <variable
-            name="nota"
+            name="note"
             type="br.com.linoo.notes.model.Note" />
     </data>
 
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:background="@drawable/ic_action_favorite"
-                android:visibility="gone"
+                android:visibility="@{note.favorita ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/item_note_titulo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/item_note_titulo"
@@ -53,7 +53,7 @@
                 android:layout_toStartOf="@+id/item_note_star"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{nota.titulo}"
+                android:text="@{note.titulo}"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +70,7 @@
                 android:layout_below="@id/item_note_titulo"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="@{nota.descricao}"
+                android:text="@{note.descricao}"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +86,7 @@
                 android:layout_below="@id/item_note_descricao"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
-                app:carregaTextoData="@{nota.data}"
+                app:carregaTextoData="@{note.data}"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/item_note_descricao"

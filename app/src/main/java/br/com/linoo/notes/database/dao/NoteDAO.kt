@@ -8,8 +8,11 @@ import br.com.linoo.notes.model.Note
 @Dao
 interface NoteDAO {
 
-    @Query("SELECT * FROM Note WHERE removida = 0 ORDER BY id DESC")
+    @Query("SELECT * FROM Note WHERE removida = 0 AND favorita = 0 ORDER BY id DESC")
     fun buscaTodas(): LiveData<List<Note>>
+
+    @Query("SELECT * FROM Note WHERE removida = 0 AND favorita = 1 ORDER BY id DESC")
+    fun buscaFavoritas(): LiveData<List<Note>>
 
     @Insert(onConflict = REPLACE)
     fun salva(note: Note)

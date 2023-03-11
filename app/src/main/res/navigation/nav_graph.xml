@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/listaNotes"
         android:name="br.com.linoo.notes.ui.fragment.ListaNotesFragment"
-        android:label="Lista de notas"
-        tools:layout="@layout/lista_notes" >
+        android:label="Lista de anotações"
+        tools:layout="@layout/lista_notes">
         <action
             android:id="@+id/acao_listaNotes_para_visualizaNote"
             app:destination="@id/visualizaNote"
@@ -27,8 +27,8 @@
     <fragment
         android:id="@+id/visualizaNote"
         android:name="br.com.linoo.notes.ui.fragment.VisualizaNoteFragment"
-        android:label="Visualiza Note"
-        tools:layout="@layout/visualiza_note" >
+        android:label="Visualiza anotação"
+        tools:layout="@layout/visualiza_note">
         <action
             android:id="@+id/acao_visualizaNote_para_formularioNote"
             app:destination="@id/formularioNote"
@@ -51,8 +51,8 @@
     <fragment
         android:id="@+id/formularioNote"
         android:name="br.com.linoo.notes.ui.fragment.FormularioNoteFragment"
-        android:label="Formulário Note"
-        tools:layout="@layout/formulario_note" >
+        android:label="Formulário anotação"
+        tools:layout="@layout/formulario_note">
         <action
             android:id="@+id/acao_formularioNote_para_listaNotes"
             app:destination="@id/listaNotes"
@@ -65,4 +65,9 @@
             android:name="noteId"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/listaNotesFavoritas"
+        android:name="br.com.linoo.notes.ui.fragment.ListaNotesFragment"
+        android:label="Lista de anotaões favoritas"
+        tools:layout="@layout/lista_notes"/>
 </navigation>

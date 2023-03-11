@@ -56,7 +56,7 @@ class ListNotesAdapter(
 
         fun vincula(note: Note) {
             this.note = note
-            viewDataBinding.nota = note
+            viewDataBinding.note = note
         }
 
         init {
