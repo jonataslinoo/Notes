@@ -24,6 +24,12 @@ class NoteRepository(
         return mediador
     }
 
+    fun buscaFavoritas(): LiveData<Resource<List<Note>?>> {
+        val mediador = MediatorLiveData<Resource<List<Note>?>>()
+        mediador.addSource(dao.buscaFavoritas()) { mediador.value = Resource(dado = it) }
+        return mediador
+    }
+
     fun buscaPorId(noteId: Long) = dao.buscaPorId(noteId)
 
     fun salva(note: Note, job: Job = Job()): LiveData<Resource<Void?>> {

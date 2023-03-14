@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/listaNotesFavoritas"
-        android:name="br.com.linoo.notes.ui.fragment.ListaNotesFragment"
+        android:name="br.com.linoo.notes.ui.fragment.ListaNotesFavoritaFragment"
         android:label="Lista de anotaões favoritas"
         tools:layout="@layout/lista_notes"/>
 </navigation>

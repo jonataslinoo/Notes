@@ -13,4 +13,8 @@ class ListaNotesViewModel(
     fun buscaTodas(): LiveData<Resource<List<Note>?>> {
         return repository.buscaTodas()
     }
+
+    fun buscaFavoritas(): LiveData<Resource<List<Note>?>> {
+        return repository.buscaFavoritas()
+    }
 }
