@@ -4,9 +4,7 @@ import br.com.linoo.notes.database.AppDatabase
 import br.com.linoo.notes.database.dao.NoteDAO
 import br.com.linoo.notes.repository.NoteRepository
 import br.com.linoo.notes.retrofit.webclient.NoteWebClient
-import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
-import br.com.linoo.notes.ui.viewmodel.ListaNotesViewModel
-import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
+import br.com.linoo.notes.ui.viewmodel.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -32,6 +30,7 @@ val viewModelModule = module {
     viewModel<ListaNotesViewModel> { ListaNotesViewModel(get()) }
     viewModel<VisualizaNoteViewModel> { VisualizaNoteViewModel(get()) }
     viewModel<FormularioNoteViewModel> { FormularioNoteViewModel(get()) }
+    viewModel<ListaNotesFavoritasViewModel> { ListaNotesFavoritasViewModel(get()) }
 }
 
 val appModules = listOf(

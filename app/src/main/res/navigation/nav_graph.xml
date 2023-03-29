@@ -67,7 +67,14 @@
     </fragment>
     <fragment
         android:id="@+id/listaNotesFavoritas"
-        android:name="br.com.linoo.notes.ui.fragment.ListaNotesFavoritaFragment"
-        android:label="Lista de anotaões favoritas"
-        tools:layout="@layout/lista_notes"/>
+        android:name="br.com.linoo.notes.ui.fragment.ListaNotesFavoritasFragment"
+        android:label="Lista de anotaões favoritas">
+        <action
+            android:id="@+id/acao_listaNotesFavoritas_para_visualizaNote"
+            app:destination="@id/visualizaNote"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 </navigation>

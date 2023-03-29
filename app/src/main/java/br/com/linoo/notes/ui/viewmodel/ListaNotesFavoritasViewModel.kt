@@ -6,11 +6,11 @@ import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.repository.NoteRepository
 import br.com.linoo.notes.repository.Resource
 
-class ListaNotesViewModel(
+class ListaNotesFavoritasViewModel(
     private val repository: NoteRepository
 ) : ViewModel() {
 
-    fun buscaTodas(): LiveData<Resource<List<Note>?>> {
-        return repository.buscaTodas()
+    fun buscaFavoritas(): LiveData<Resource<List<Note>?>> {
+        return repository.buscaFavoritas()
     }
 }

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
     }
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         defineContentViewBinding()
