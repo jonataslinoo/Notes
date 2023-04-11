@@ -3,9 +3,11 @@ package br.com.linoo.notes.ui.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ActivityMainBinding
+import br.com.linoo.notes.ui.viewmodel.AppViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +15,8 @@ class MainActivity : AppCompatActivity() {
     private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
     }
-    
+    private val appViewModel: AppViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         defineContentViewBinding()
@@ -23,6 +26,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.mainActivityBottomNavigation.setupWithNavController(controlador)
+        appViewModel.updateSelectedMenuId(binding.mainActivityBottomNavigation.selectedItemId)
+
+        binding.mainActivityBottomNavigation.setOnNavigationItemSelectedListener {
+            appViewModel.updateSelectedMenuId(it.itemId)
+            it.onNavDestinationSelected(controlador)
+        }
     }
 }

@@ -1,6 +1,5 @@
 package br.com.linoo.notes.ui.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -61,7 +60,11 @@ class ListaNotesFavoritasFragment : Fragment() {
         }
         listaNotasAdapter.quandoItemClicado = { noteSelected ->
             transacaoNavController {
-                navigate(ListaNotesFavoritasFragmentDirections.acaoListaNotesFavoritasParaVisualizaNote(noteSelected.id))
+                navigate(
+                    ListaNotesFavoritasFragmentDirections.acaoListaNotesFavoritasParaVisualizaNote(
+                        noteSelected.id
+                    )
+                )
             }
         }
     }

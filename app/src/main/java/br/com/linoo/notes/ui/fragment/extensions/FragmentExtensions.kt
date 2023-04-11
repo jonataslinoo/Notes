@@ -12,7 +12,7 @@ fun Fragment.mostraMensagem(mensagem: String) {
     Toast.makeText(
         context,
         mensagem,
-        Toast.LENGTH_LONG
+        Toast.LENGTH_SHORT
     ).show()
 }
 

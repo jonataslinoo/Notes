@@ -31,6 +31,7 @@ val viewModelModule = module {
     viewModel<VisualizaNoteViewModel> { VisualizaNoteViewModel(get()) }
     viewModel<FormularioNoteViewModel> { FormularioNoteViewModel(get()) }
     viewModel<ListaNotesFavoritasViewModel> { ListaNotesFavoritasViewModel(get()) }
+    viewModel<AppViewModel> { AppViewModel() }
 }
 
 val appModules = listOf(

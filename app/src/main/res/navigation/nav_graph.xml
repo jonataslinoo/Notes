@@ -64,6 +64,9 @@
         <argument
             android:name="noteId"
             app:argType="long" />
+        <action
+            android:id="@+id/acao_formularioNote_para_listaNotesFavoritas"
+            app:destination="@id/listaNotesFavoritas" />
     </fragment>
     <fragment
         android:id="@+id/listaNotesFavoritas"

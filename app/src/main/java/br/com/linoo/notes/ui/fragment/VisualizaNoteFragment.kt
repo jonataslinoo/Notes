@@ -8,7 +8,6 @@ import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.VisualizaNoteBinding
 import br.com.linoo.notes.model.Note
-import br.com.linoo.notes.ui.databinding.NoteData
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
@@ -119,7 +118,7 @@ class VisualizaNoteFragment : Fragment() {
 
     private fun endFragment() {
         transacaoNavController {
-            navigate(VisualizaNoteFragmentDirections.acaoVisualizaNoteParaListaNotes())
+            popBackStack()
         }
     }
 }

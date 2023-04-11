@@ -12,7 +12,9 @@ import br.com.linoo.notes.ui.databinding.NoteData
 import br.com.linoo.notes.ui.fragment.extensions.hideKeyboard
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
+import br.com.linoo.notes.ui.viewmodel.AppViewModel
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -20,6 +22,8 @@ private const val TITULO_APPBAR_EDICAO = "Editando Anotação"
 private const val TITULO_APPBAR_CRIACAO = "Criando Anotação"
 private const val MENSAGEM_ERRO_SALVAR = "Não foi possível salvar a Anotação"
 private const val MENSAGEM_ERRO_CAMPOS_VAZIO = "Não podem haver campos vazios."
+private const val LISTA_ANOTACOES = 2131230946
+private const val LISTA_FAVORITAS = 2131230947
 
 class FormularioNoteFragment : Fragment() {
 
@@ -28,6 +32,7 @@ class FormularioNoteFragment : Fragment() {
     private val noteData by lazy { NoteData() }
     private val viewModel: FormularioNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var viewDataBinding: FormularioNoteBinding
+    private val appViewModel: AppViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,8 +127,19 @@ class FormularioNoteFragment : Fragment() {
     private fun temIdValido() = noteId != 0L
 
     private fun endFragment() {
-        transacaoNavController {
-            navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotes())
-        }
+        appViewModel.selectedMenuId.observe(this, Observer { menuItemId ->
+            when (menuItemId) {
+                LISTA_ANOTACOES -> {
+                    transacaoNavController {
+                        navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotes())
+                    }
+                }
+                LISTA_FAVORITAS -> {
+                    transacaoNavController {
+                        navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotesFavoritas())
+                    }
+                }
+            }
+        })
     }
 }
