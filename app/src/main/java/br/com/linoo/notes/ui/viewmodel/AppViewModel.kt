@@ -12,4 +12,21 @@ class AppViewModel : ViewModel() {
     fun updateSelectedMenuId(menuId: Int) {
         _selectedMenuId.value = menuId
     }
+
+    val componentes: LiveData<ComponentesVisuais> get() = _componentes
+
+    private var _componentes: MutableLiveData<ComponentesVisuais> =
+        MutableLiveData<ComponentesVisuais>().also {
+            it.value = temComponentes
+        }
+
+    var temComponentes: ComponentesVisuais = ComponentesVisuais()
+    set(value) {
+        field = value
+        _componentes.value = value
+    }
 }
+
+class ComponentesVisuais(
+    val bottomNavigation: Boolean = false
+)

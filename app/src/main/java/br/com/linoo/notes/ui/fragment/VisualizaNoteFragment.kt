@@ -10,7 +10,10 @@ import br.com.linoo.notes.databinding.VisualizaNoteBinding
 import br.com.linoo.notes.model.Note
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
+import br.com.linoo.notes.ui.viewmodel.AppViewModel
+import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -25,6 +28,7 @@ class VisualizaNoteFragment : Fragment() {
     private val noteId: Long by lazy { arguments.noteId }
     private val viewModel: VisualizaNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var viewDataBinding: VisualizaNoteBinding
+    private val appViewModel: AppViewModel by sharedViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,8 @@ class VisualizaNoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.title = TITULO_APPBAR
+        appViewModel.temComponentes = ComponentesVisuais()
+    //        activity?.title = TITULO_APPBAR
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -10,11 +10,13 @@ import br.com.linoo.notes.databinding.ListaNotesBinding
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.recyclerview.adapter.ListNotesAdapter
+import br.com.linoo.notes.ui.viewmodel.AppViewModel
+import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.ListaNotesFavoritasViewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val MENSAGEM_FALHA_CARREGAR_NOTES = "Não foi possível carregar as anotações favoritas"
-private const val TITULO_APPBAR = "Favoritas"
 
 class ListaNotesFavoritasFragment : Fragment() {
     private val viewModel: ListaNotesFavoritasViewModel by viewModel()
@@ -23,6 +25,7 @@ class ListaNotesFavoritasFragment : Fragment() {
             ListNotesAdapter(context = it)
         } ?: throw IllegalArgumentException("Contexto Inválido")
     }
+    private val appViewModel: AppViewModel by sharedViewModel()
 
     private lateinit var viewDataBinding: ListaNotesBinding
 
@@ -43,8 +46,8 @@ class ListaNotesFavoritasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        appViewModel.temComponentes = ComponentesVisuais(bottomNavigation = true)
         configuraRecyclerView()
-        activity?.title = TITULO_APPBAR
     }
 
     private fun buscaNotesFavotiras() {

@@ -13,6 +13,7 @@ import br.com.linoo.notes.ui.fragment.extensions.hideKeyboard
 import br.com.linoo.notes.ui.fragment.extensions.mostraMensagem
 import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.AppViewModel
+import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -52,6 +53,7 @@ class FormularioNoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        appViewModel.temComponentes = ComponentesVisuais()
         definindoTitulo()
         preencheFormulario()
     }

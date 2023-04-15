@@ -1,7 +1,10 @@
 package br.com.linoo.notes.ui.activity
 
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import br.com.linoo.notes.R
@@ -15,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
     }
-    private val appViewModel: AppViewModel by viewModel()
+    private val viewModel: AppViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +29,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        appViewModel.updateSelectedMenuId(binding.mainActivityBottomNavigation.selectedItemId)
+        controlador.addOnDestinationChangedListener { controller, destination, arguments ->
 
-        binding.mainActivityBottomNavigation.setOnNavigationItemSelectedListener {
-            appViewModel.updateSelectedMenuId(it.itemId)
-            it.onNavDestinationSelected(controlador)
+            title = destination.label
+            viewModel.componentes.observe(this, Observer {
+                it?.let { temComponentes ->
+                    if (temComponentes.bottomNavigation) {
+                        binding.mainActivityBottomNavigation.visibility = VISIBLE
+                    } else {
+                        binding.mainActivityBottomNavigation.visibility = GONE
+                    }
+                }
+            })
+        }
+
+        viewModel.updateSelectedMenuId(binding.mainActivityBottomNavigation.selectedItemId)
+
+        binding.mainActivityBottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            viewModel.updateSelectedMenuId(menuItem.itemId)
+            menuItem.onNavDestinationSelected(controlador)
         }
     }
 }

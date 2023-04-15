@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/listaNotesFavoritas"
         android:name="br.com.linoo.notes.ui.fragment.ListaNotesFavoritasFragment"
-        android:label="Lista de anotaões favoritas">
+        android:label="Lista de anotações favoritas">
         <action
             android:id="@+id/acao_listaNotesFavoritas_para_visualizaNote"
             app:destination="@id/visualizaNote"
