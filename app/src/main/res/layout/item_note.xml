@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="clicaNaNota"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="note"
+            type="br.com.linoo.notes.model.Note" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/item_note_principal_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:onClick="@{(view) -> clicaNaNota.onClick(view)}"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/white">
+
+            <ImageButton
+                android:id="@+id/item_note_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/ic_action_favorite"
+                android:visibility="@{note.favorita ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/item_note_titulo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/item_note_titulo"
+                app:layout_constraintTop_toTopOf="@id/item_note_titulo" />
+
+            <TextView
+                android:id="@+id/item_note_titulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/item_note_star"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{note.titulo}"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/item_note_star"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Teste titulo app anotações tamanho texto" />
+
+            <TextView
+                android:id="@+id/item_note_descricao"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_note_titulo"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{note.descricao}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/item_note_titulo"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="@tools:sample/lorem/random" />
+
+            <TextView
+                android:id="@+id/item_note_data"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_note_descricao"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                app:carregaTextoData="@{note.data}"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/item_note_descricao"
+                app:layout_constraintStart_toStartOf="@id/item_note_descricao"
+                app:layout_constraintTop_toBottomOf="@id/item_note_descricao"
+                tools:text="@tools:sample/lorem" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
