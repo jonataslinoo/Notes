@@ -5,7 +5,7 @@ import br.com.linoo.notes.database.dao.NoteDAO
 import br.com.linoo.notes.repository.NoteRepository
 import br.com.linoo.notes.retrofit.webclient.NoteWebClient
 import br.com.linoo.notes.ui.viewmodel.*
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val dbModule = module {

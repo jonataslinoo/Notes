@@ -13,8 +13,8 @@ import br.com.linoo.notes.ui.recyclerview.adapter.ListNotesAdapter
 import br.com.linoo.notes.ui.viewmodel.AppViewModel
 import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.ListaNotesFavoritasViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val MENSAGEM_FALHA_CARREGAR_NOTES = "Não foi possível carregar as anotações favoritas"
 
@@ -25,7 +25,7 @@ class ListaNotesFavoritasFragment : Fragment() {
             ListNotesAdapter(context = it)
         } ?: throw IllegalArgumentException("Contexto Inválido")
     }
-    private val appViewModel: AppViewModel by sharedViewModel()
+    private val appViewModel: AppViewModel by activityViewModel<AppViewModel>()
 
     private lateinit var viewDataBinding: ListaNotesBinding
 

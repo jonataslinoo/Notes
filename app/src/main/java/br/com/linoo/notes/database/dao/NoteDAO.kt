@@ -2,7 +2,7 @@ package br.com.linoo.notes.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import br.com.linoo.notes.model.Note
 
 @Dao

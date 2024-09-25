@@ -10,7 +10,8 @@ import androidx.navigation.ui.onNavDestinationSelected
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.ActivityMainBinding
 import br.com.linoo.notes.ui.viewmodel.AppViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 private const val LISTA_FAVORITAS = 2131230947
 
 class MainActivity : AppCompatActivity() {
@@ -44,12 +45,14 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
+//        viewModel.updateSelectedMenuId(binding.mainActivityBottomNavigation.selectedItemId)
         viewModel.updateSelectedMenuId(binding.mainActivityBottomNavigation.selectedItemId)
 
         binding.mainActivityBottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             viewModel.updateSelectedMenuId(menuItem.itemId)
 
-            if(menuItem.itemId == LISTA_FAVORITAS) controlador.popBackStack()
+//            if (menuItem.itemId == LISTA_FAVORITAS) controlador.popBackStack()
+//            if (menuItem.itemId == R.id.listaNotesFavoritas) controlador.popBackStack()
 
             menuItem.onNavDestinationSelected(controlador)
         }

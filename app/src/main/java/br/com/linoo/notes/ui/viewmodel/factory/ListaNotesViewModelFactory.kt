@@ -8,7 +8,7 @@ import br.com.linoo.notes.ui.viewmodel.ListaNotesViewModel
 class ListaNotesViewModelFactory(private val repository: NoteRepository) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ListaNotesViewModel(repository) as T
     }
 }

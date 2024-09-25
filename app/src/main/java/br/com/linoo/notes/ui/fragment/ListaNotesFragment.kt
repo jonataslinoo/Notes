@@ -13,25 +13,26 @@ import br.com.linoo.notes.ui.recyclerview.adapter.ListNotesAdapter
 import br.com.linoo.notes.ui.viewmodel.AppViewModel
 import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.ListaNotesViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val MENSAGEM_FALHA_CARREGAR_NOTES = "Não foi possível carregar as anotações"
 
 class ListaNotesFragment : Fragment() {
+
     private val viewModel: ListaNotesViewModel by viewModel()
     private val listaNotasAdapter by lazy {
         context?.let {
             ListNotesAdapter(context = it)
         } ?: throw IllegalArgumentException("Contexto Inválido")
     }
-    private val appViewModel: AppViewModel by sharedViewModel()
+    private val appViewModel: AppViewModel by activityViewModel<AppViewModel>()
 
     private lateinit var viewDataBinding: ListaNotesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buscaNotes()
+//        buscaNotes()
     }
 
     override fun onCreateView(
@@ -50,10 +51,11 @@ class ListaNotesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         appViewModel.temComponentes = ComponentesVisuais(bottomNavigation = true)
         configuraRecyclerView()
+        buscaNotes()
     }
 
     private fun buscaNotes() {
-        viewModel.buscaTodas().observe(this, Observer { resource ->
+        viewModel.buscaTodas().observe(viewLifecycleOwner, Observer { resource ->
             resource.dado?.let { listaNotasAdapter.atualiza(it) }
             resource.erro?.let { mostraMensagem(MENSAGEM_FALHA_CARREGAR_NOTES) }
         })

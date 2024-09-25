@@ -1,9 +1,18 @@
 package br.com.linoo.notes.ui.fragment
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.navArgs
 import br.com.linoo.notes.R
 import br.com.linoo.notes.databinding.FormularioNoteBinding
@@ -15,8 +24,8 @@ import br.com.linoo.notes.ui.fragment.extensions.transacaoNavController
 import br.com.linoo.notes.ui.viewmodel.AppViewModel
 import br.com.linoo.notes.ui.viewmodel.ComponentesVisuais
 import br.com.linoo.notes.ui.viewmodel.FormularioNoteViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 private const val TITULO_APPBAR_EDICAO = "Editando Anotação"
@@ -33,11 +42,36 @@ class FormularioNoteFragment : Fragment() {
     private val noteData by lazy { NoteData() }
     private val viewModel: FormularioNoteViewModel by viewModel { parametersOf(noteId) }
     private lateinit var viewDataBinding: FormularioNoteBinding
-    private val appViewModel: AppViewModel by sharedViewModel()
+    private val appViewModel: AppViewModel by activityViewModel<AppViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true) //libera os menus para o fragment
+
+    }
+
+    private fun configuraMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.formulario_note_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.formulario_note_salva -> {
+                        val noteCriada = criaNote()
+                        noteCriada?.let {
+                            if (validaCamposTextoVazio(it.titulo, it.descricao)) {
+                                salva(noteCriada)
+                            }
+                        }
+                        hideKeyboard(viewDataBinding.formularioNoteTitulo)
+                        hideKeyboard(viewDataBinding.formularioNoteTexto)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onCreateView(
@@ -54,31 +88,9 @@ class FormularioNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appViewModel.temComponentes = ComponentesVisuais()
+        configuraMenu()
         definindoTitulo()
         preencheFormulario()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.formulario_note_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
-            R.id.formulario_note_salva -> {
-                val noteCriada = criaNote()
-                noteCriada?.let {
-                    if (validaCamposTextoVazio(it.titulo, it.descricao)) {
-                        salva(noteCriada)
-                    }
-                }
-            }
-        }
-
-        hideKeyboard(viewDataBinding.formularioNoteTitulo)
-        hideKeyboard(viewDataBinding.formularioNoteTexto)
-
-        return super.onOptionsItemSelected(item)
     }
 
     private fun criaNote(): Note? {
@@ -106,7 +118,7 @@ class FormularioNoteFragment : Fragment() {
 
     private fun preencheFormulario() {
         if (temIdValido()) {
-            viewModel.buscaPorId(noteId).observe(this, Observer {
+            viewModel.buscaPorId(noteId).observe(viewLifecycleOwner, Observer {
                 it?.let { noteEncontrada ->
                     noteData.atualiza(noteEncontrada)
                 }
@@ -131,12 +143,13 @@ class FormularioNoteFragment : Fragment() {
     private fun endFragment() {
         appViewModel.selectedMenuId.observe(this, Observer { menuItemId ->
             when (menuItemId) {
-                LISTA_ANOTACOES -> {
+                R.id.listaNotes -> {
                     transacaoNavController {
-                        navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotes())
+                        navigate(navDirections())
                     }
                 }
-                LISTA_FAVORITAS -> {
+
+                R.id.listaNotesFavoritas -> {
                     transacaoNavController {
                         navigate(FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotesFavoritas())
                     }
@@ -144,4 +157,7 @@ class FormularioNoteFragment : Fragment() {
             }
         })
     }
+
+    private fun navDirections(): NavDirections =
+        FormularioNoteFragmentDirections.acaoFormularioNoteParaListaNotes()
 }

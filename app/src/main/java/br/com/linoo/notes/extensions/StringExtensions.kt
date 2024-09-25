@@ -1,6 +1,11 @@
 package br.com.linoo.notes.extensions
 
+import android.os.Build
+import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -35,5 +40,21 @@ fun String.salvaDataFormatada(): String {
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         val parsed = ZonedDateTime.parse(this, formatter)
         parsed.toString()
+    }
+}
+
+private val FORMATO_DATA = "dd/MM/yyyy HH:mm"
+fun Long.formatBrazilianDate(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val toLocalDate = Instant.ofEpochMilli(this)
+            .atZone(ZoneId.of("America/Sao_Paulo"))
+            .withZoneSameInstant(ZoneId.ofOffset("UTC", ZoneOffset.UTC))
+            .toLocalDate()
+        val formatador = DateTimeFormatter
+            .ofPattern(FORMATO_DATA, Locale("pt-br"))
+        formatador.format(toLocalDate)
+    } else {
+        val simpleDateFormat = SimpleDateFormat(FORMATO_DATA)
+        simpleDateFormat.format(this)
     }
 }

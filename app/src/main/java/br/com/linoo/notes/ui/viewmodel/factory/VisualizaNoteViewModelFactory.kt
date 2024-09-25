@@ -8,7 +8,7 @@ import br.com.linoo.notes.ui.viewmodel.VisualizaNoteViewModel
 class VisualizaNoteViewModelFactory(
     private val repository: NoteRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return VisualizaNoteViewModel(repository) as T
     }
 }
